@@ -1,0 +1,10 @@
+{
+    "tg_API_token": "6383859349:AAH5c6jBVkxs5Y8zEDS5DymCFNhChcBwq5w",
+    "horoscope_settings":
+    {
+        "chatgpt_api_key": "your_chatgpt_api_key",
+        "prompt": "your_chatgpt_prompt",
+        "cute_gm_text": "your_cute_gm_text",
+        "target_chat_id": "your_tg_chat_id"
+    }
+}
