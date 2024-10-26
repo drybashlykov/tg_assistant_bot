@@ -31,21 +31,24 @@ def chatgpt_request(prompt, api_key):
         # Handle errors
         return f"Error: {response.status_code} - {response.text}"
 
-# CONFIG
-with open('config.json') as f:
-    config = json.load(f)
 
-API_TOKEN = config["tg_API_token"]
-target_chat_id = config["horoscope_settings"]["target_chat_id"]
-prompt = config["horoscope_settings"]["prompt"]
-cute_gm_text = config["horoscope_settings"]["cute_gm_text"]
+def horoscope():
+    # CONFIG
+    with open('config.json') as f:
+        config = json.load(f)
 
-# response = chatgpt_request(prompt)
+    API_TOKEN = config["tg_API_token"]
+    target_chat_id = config["horoscope_settings"]["target_chat_id"]
+    api_key = config["horoscope_settings"]["chatgpt_api_key"]
+    prompt = config["horoscope_settings"]["prompt"]
+    cute_gm_text = config["horoscope_settings"]["cute_gm_text"]
 
-response = "Pretend it's a horoscope"
+    response = chatgpt_request(prompt, api_key)
 
-# Initialize the bot with your token
-bot = TeleBot(API_TOKEN)
+    # Initialize the bot with your token
+    bot = TeleBot(API_TOKEN)
 
-bot.send_message(chat_id=target_chat_id, text=cute_gm_text)
-bot.send_message(chat_id=target_chat_id, text=response)
+    bot.send_message(chat_id=target_chat_id, text=cute_gm_text)
+    bot.send_message(chat_id=target_chat_id, text=response)
+
+    return 0
