@@ -5,23 +5,12 @@ import json
 import threading
 import os
 from time import sleep
-from med_reminder import med_reminder
+from med_reminder import start_med_repeater
 from horoscope import horoscope
 
 from telebot import TeleBot
 from apscheduler.schedulers.background import BackgroundScheduler
 from apscheduler.triggers.cron import CronTrigger
-
-# DEFINE VARIABLES
-
-class State:
-    def __init__(self):
-        self.message_id = "0"
-
-        # -1 for not yet started, 
-        # 1 for keep reminding, 
-        # 0 for stop reminding
-        self.keep_reminding = -1
 
 # DEFINE SCHEDULER
 
@@ -50,26 +39,6 @@ def setup_scheduler():
         args=[],
         name="horoscope",
     )
-
-# DEFINE MED_REPEATER
-
-def med_repeater():
-    state.message_id = med_reminder()
-    state.keep_reminding = 1
-    reminder_counter = 1
-    interval = 5
-    while state.keep_reminding:
-        if reminder_counter > 3:
-            interval = 60
-        sleep(interval * 60)
-        if state.keep_reminding:
-            state.message_id = med_reminder()
-            reminder_counter += 1
-
-def start_med_repeater():
-    th = threading.Thread(target=med_repeater)
-    th.daemon = True
-    th.start()
 
 # START SCHEDULER
 

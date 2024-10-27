@@ -2,6 +2,18 @@ import json
 from telebot import TeleBot
 from telebot import types
 from time import sleep
+import threading
+
+
+class State:
+    def __init__(self):
+        self.message_id = "0"
+
+        # -1 for not yet started, 
+        # 1 for keep reminding, 
+        # 0 for stop reminding
+        self.keep_reminding = -1
+
 
 def med_reminder():
     # CONFIG
@@ -24,3 +36,24 @@ def med_reminder():
     
     return message.message_id
 
+
+def med_repeater(state):
+    state.message_id = med_reminder()
+    state.keep_reminding = 1
+    reminder_counter = 1
+    interval = 5
+    while state.keep_reminding:
+        if reminder_counter > 3:
+            interval = 60
+        sleep(interval * 60)
+        if state.keep_reminding:
+            state.message_id = med_reminder()
+            reminder_counter += 1
+
+
+def start_med_repeater():
+    state = State()
+
+    th = threading.Thread(target=med_repeater, args=[state])
+    th.daemon = True
+    th.start()
