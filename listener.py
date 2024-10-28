@@ -7,6 +7,7 @@ import os
 from time import sleep
 from med_reminder import start_med_repeater
 from horoscope import horoscope
+import sys
 
 from telebot import TeleBot
 from apscheduler.schedulers.background import BackgroundScheduler
@@ -15,8 +16,7 @@ from apscheduler.triggers.cron import CronTrigger
 # DEFINE SCHEDULER
 
 def setup_scheduler():
-    scheduler = BackgroundScheduler(job_defaults={'misfire_grace_time': 15*60},)
-    scheduler.start()
+    scheduler = BackgroundScheduler(job_defaults={'misfire_grace_time': 15*60})
 
     med_trigger = CronTrigger(
         year="*", month="*", day="*", hour="9", minute="50", second="0"
@@ -46,12 +46,9 @@ setup_scheduler()
 
 # LOAD CONFIG
 
-with open('config.json') as f:
+config_path = sys.argv[1]
+with open(config_path) as f:
     config = json.load(f)
-
-# CREATE STATE VARIABLES
-
-state = State()  # Create a shared state object
 
 API_TOKEN = config["tg_API_token"]
 med_taken_response = config["med_reminder"]["med_taken_response"]
