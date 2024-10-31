@@ -15,10 +15,8 @@ class State:
         self.keep_reminding = -1
 
 
-def med_reminder():
+def med_reminder(config):
     # CONFIG
-    with open('config.json') as f:
-        config = json.load(f)
 
     API_TOKEN = config["tg_API_token"]
     target_chat_id = config["med_reminder"]["target_chat_id"]
@@ -37,8 +35,8 @@ def med_reminder():
     return message.message_id
 
 
-def med_repeater(state):
-    state.message_id = med_reminder()
+def med_repeater(config, state):
+    state.message_id = med_reminder(config)
     state.keep_reminding = 1
     reminder_counter = 1
     interval = 5
@@ -47,13 +45,13 @@ def med_repeater(state):
             interval = 60
         sleep(interval * 60)
         if state.keep_reminding:
-            state.message_id = med_reminder()
+            state.message_id = med_reminder(config)
             reminder_counter += 1
 
 
-def start_med_repeater():
+def start_med_repeater(config):
     state = State()
 
-    th = threading.Thread(target=med_repeater, args=[state])
+    th = threading.Thread(target=med_repeater, args=[config, state])
     th.daemon = True
     th.start()

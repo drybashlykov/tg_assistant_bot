@@ -32,18 +32,22 @@ def chatgpt_request(prompt, api_key):
         return f"Error: {response.status_code} - {response.text}"
 
 
-def horoscope():
+def horoscope(config):
     # CONFIG
-    with open('config.json') as f:
-        config = json.load(f)
-
     API_TOKEN = config["tg_API_token"]
-    target_chat_id = config["horoscope_settings"]["target_chat_id"]
-    api_key = config["horoscope_settings"]["chatgpt_api_key"]
-    prompt = config["horoscope_settings"]["prompt"]
-    cute_gm_text = config["horoscope_settings"]["cute_gm_text"]
 
-    response = chatgpt_request(prompt, api_key)
+    settings = config["horoscope_settings"]
+    target_chat_id = settings["target_chat_id"]
+    api_key = settings["chatgpt_api_key"]
+    prompt = settings["prompt"]
+    cute_gm_text = settings["cute_gm_text"]
+
+    if settings["mode"] == "normal":
+        response = chatgpt_request(prompt, api_key)
+    elif settings["mode"] == "testing":
+        response = "Pretend this is a horoscope"
+    else:
+        print("Invalid horoscope mode. Aborting.")
 
     # Initialize the bot with your token
     bot = TeleBot(API_TOKEN)

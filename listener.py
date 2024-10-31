@@ -13,42 +13,24 @@ from telebot import TeleBot
 from apscheduler.schedulers.background import BackgroundScheduler
 from apscheduler.triggers.cron import CronTrigger
 
-# DEFINE SCHEDULER
-
-def setup_scheduler():
-    scheduler = BackgroundScheduler(job_defaults={'misfire_grace_time': 15*60})
-
-    med_trigger = CronTrigger(
-        year="*", month="*", day="*", hour="9", minute="50", second="0"
-    )
-
-    horoscope_trigger = CronTrigger(
-        year="*", month="*", day="*", hour="7", minute="30", second="0"
-    )
-
-    scheduler.add_job(  
-        start_med_repeater,
-        trigger=med_trigger,
-        args=[],
-        name="med reminder",
-    )
-
-    scheduler.add_job(  
-        horoscope,
-        trigger=horoscope_trigger,
-        args=[],
-        name="horoscope",
-    )
-
-# START SCHEDULER
-
-setup_scheduler()
-
-# LOAD CONFIG
+from scheduler_setup_utils import setup_scheduler
 
 config_path = sys.argv[1]
 with open(config_path) as f:
     config = json.load(f)
+
+# DEFINE SCHEDULER
+
+# TODO: setup scheduler according to config
+
+# START SCHEDULER
+
+scheduler = setup_scheduler(config)
+scheduler.start()
+
+# LOAD CONFIG
+
+
 
 API_TOKEN = config["tg_API_token"]
 med_taken_response = config["med_reminder"]["med_taken_response"]
