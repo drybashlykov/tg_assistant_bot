@@ -5,7 +5,8 @@
         "chatgpt_api_key": "your_chatgpt_api_key",
         "prompt": "your_chatgpt_prompt",
         "cute_gm_text": "your_cute_gm_text",
-        "target_chat_id": "your_tg_chat_id"
+        "target_chat_id": "your_tg_chat_id",
+        "mode": "normal"
     },
     "med_reminder": 
     {
@@ -13,6 +14,24 @@
         "med_taken_label": "your_label",
         "med_taken_response": "your_msg",
         "med_taken_edit_message": "your_msg",
-        "target_chat_id": "your_tg_chat_id"
+        "target_chat_id": "your_tg_chat_id",
+        "mode": "normal"
+    }
+    "scheduling":
+    {
+        "mode": "normal",
+        "tasks": 
+        {
+            "med_reminder":
+            {
+                "hour": "10",
+                "minute": "00"
+            },
+            "horoscope":
+            {
+                "hour": "10",
+                "minute": "00"
+            }
+        }
     }
 }

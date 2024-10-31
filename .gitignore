@@ -1,2 +1,4 @@
 assistant_venv/*
+__pycache__/*
 config.json
+config_test.json
