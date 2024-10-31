@@ -32,7 +32,7 @@ def chatgpt_request(prompt, api_key):
         return f"Error: {response.status_code} - {response.text}"
 
 
-def horoscope(config):
+def horoscope(config, linked_objects):
     # CONFIG
     API_TOKEN = config["tg_API_token"]
 

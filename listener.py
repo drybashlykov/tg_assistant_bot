@@ -19,27 +19,30 @@ config_path = sys.argv[1]
 with open(config_path) as f:
     config = json.load(f)
 
-# DEFINE SCHEDULER
+# LINK INTERACTIVE MODULES
 
-# TODO: setup scheduler according to config
+class LinkedObjects():
+    def __init__(self):
+        self.med_reminder_state = None
+
+linked_objects = LinkedObjects()
 
 # START SCHEDULER
 
-scheduler = setup_scheduler(config)
+scheduler = setup_scheduler(config, linked_objects)
 scheduler.start()
 
 # LOAD CONFIG
-
-
 
 API_TOKEN = config["tg_API_token"]
 med_taken_response = config["med_reminder"]["med_taken_response"]
 target_chat_id_M = config["med_reminder"]["target_chat_id"]
 med_taken_edit_message = config["med_reminder"]["med_taken_edit_message"]
 
+
+
 # Initialize the bot with your token
 bot = TeleBot(API_TOKEN)
-# report_handler = socketserver.TCPServer((HOST, PORT), TCPReportHandler)
 
 @bot.message_handler(func=lambda msg: True)
 def echo_all(message):
@@ -50,7 +53,10 @@ def echo_all(message):
 def callback_query(call):
     if call.data == "med_taken":
         bot.answer_callback_query(call.id, med_taken_response)
-        bot.edit_message_text(med_taken_edit_message, target_chat_id_M, state.message_id, reply_markup=None)
-        state.keep_reminding = 0
+        bot.edit_message_text(med_taken_edit_message,
+                              target_chat_id_M,
+                              linked_objects.med_reminder_state.message_id,
+                              reply_markup=None)
+        linked_objects.med_reminder_state.keep_reminding = 0
 
 bot.infinity_polling()

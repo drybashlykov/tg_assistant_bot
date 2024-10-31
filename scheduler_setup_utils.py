@@ -24,31 +24,31 @@ def get_interval_trigger(task_settings):
     trigger = DateTrigger(datetime.now() + interval)
     return trigger
 
-def add_task(scheduler, trigger, task, config):
+def add_task(scheduler, trigger, task, config, linked_objects):
     job_func = job_dict[task]
     #job_func = test_job_func
     scheduler.add_job(  
         job_func,
         trigger=trigger,
-        args=[config],
+        args=[config, linked_objects],
         name=task,
     )
     return 0
 
-def setup_scheduler(config):
+def setup_scheduler(config, linked_objects):
     scheduler = BackgroundScheduler(job_defaults={'misfire_grace_time': 15*60})
     
     if config["scheduling"]["mode"] == "normal":
         for task in config["scheduling"]["tasks"]:
             task_settings = config["scheduling"]["tasks"][task]
             trigger = get_cron_trigger(task_settings)
-            add_task(scheduler, trigger, task, config)
+            add_task(scheduler, trigger, task, config, linked_objects)
 
     if config["scheduling"]["mode"] == "testing":
         for task in config["scheduling"]["tasks"]:
             task_settings = config["scheduling"]["tasks"][task]
             trigger = get_interval_trigger(task_settings)
-            add_task(scheduler, trigger, task, config)
+            add_task(scheduler, trigger, task, config, linked_objects)
 
     # med_trigger = CronTrigger(
     #     year="*", month="*", day="*", hour="9", minute="50", second="0"

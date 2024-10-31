@@ -14,7 +14,8 @@
         "med_taken_label": "your_label",
         "med_taken_response": "your_msg",
         "med_taken_edit_message": "your_msg",
-        "target_chat_id": "your_tg_chat_id"
+        "target_chat_id": "your_tg_chat_id",
+        "mode": "normal"
     }
     "scheduling":
     {
