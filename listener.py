@@ -7,6 +7,7 @@ import os
 from time import sleep
 from med_reminder import start_med_repeater
 from horoscope import horoscope
+import weight_tracker
 import sys
 
 from telebot import TeleBot
@@ -46,7 +47,16 @@ bot = TeleBot(API_TOKEN)
 
 @bot.message_handler(func=lambda msg: True)
 def echo_all(message):
-    bot.reply_to(message, f"Echo: {message.text}")
+    if not message.reply_to_message:
+        bot.reply_to(message, f"Echo: {message.text}")
+    elif is_reply_to_weight_tracker(message):
+        weight_tracker.log_reply(config, message)
+
+
+def is_reply_to_weight_tracker(message):
+    prefix = config["weight_tracker"]["reminder_prefix"]
+    return message.reply_to_message.text[:len(prefix)] == prefix
+
 
 # For med_reminder
 @bot.callback_query_handler(func=lambda call: True)

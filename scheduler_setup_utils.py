@@ -1,5 +1,6 @@
 from med_reminder import start_med_repeater
 from horoscope import horoscope
+from weight_tracker import weight_tracker
 from datetime import datetime, timedelta
 
 from apscheduler.schedulers.background import BackgroundScheduler
@@ -7,7 +8,8 @@ from apscheduler.triggers.cron import CronTrigger
 from apscheduler.triggers.date import DateTrigger
 
 job_dict = {"med_reminder": start_med_repeater,
-            "horoscope": horoscope}
+            "horoscope": horoscope,
+            "weight_tracker": weight_tracker}
 
 def get_cron_trigger(task_settings):
     t_s = task_settings
@@ -41,14 +43,19 @@ def setup_scheduler(config, linked_objects):
     if config["scheduling"]["mode"] == "normal":
         for task in config["scheduling"]["tasks"]:
             task_settings = config["scheduling"]["tasks"][task]
-            trigger = get_cron_trigger(task_settings)
-            add_task(scheduler, trigger, task, config, linked_objects)
+            if task_settings["enabled"]:
+                trigger = get_cron_trigger(task_settings)
+                add_task(scheduler, trigger, task, config, linked_objects)
 
     if config["scheduling"]["mode"] == "testing":
         for task in config["scheduling"]["tasks"]:
             task_settings = config["scheduling"]["tasks"][task]
-            trigger = get_interval_trigger(task_settings)
-            add_task(scheduler, trigger, task, config, linked_objects)
+            if task_settings["enabled"]:
+                if task_settings["seconds"] == -1:
+                    pass
+                else:
+                    trigger = get_interval_trigger(task_settings)
+                    add_task(scheduler, trigger, task, config, linked_objects)
 
     # med_trigger = CronTrigger(
     #     year="*", month="*", day="*", hour="9", minute="50", second="0"
